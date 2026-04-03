@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Mark as Cash Paid{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+      <div class="text-center mb-4">
+        <div style="font-size:3rem;">💵</div>
+        <h3 class="section-header mt-2 mb-1">Mark Cash Payment</h3>
+        <p class="text-muted">Confirm that <strong>{{ rsvp.full_name }}</strong> has paid in cash.</p>
+      </div>
+
+      <div class="card p-4 mb-3" style="background:var(--primary-light); border-radius:12px;">
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted small">Name</span>
+          <span class="fw-600 small">{{ rsvp.full_name }}</span>
+        </div>
+        <div class="d-flex justify-content-between mb-2">
+          <span class="text-muted small">Reg Number</span>
+          <span class="fw-600 small">{{ rsvp.registration_number }}</span>
+        </div>
+        <div class="d-flex justify-content-between">
+          <span class="text-muted small">Amount</span>
+          <span class="fw-700 small" style="color:var(--accent);">KSh {{ rsvp.event.contribution_amount }}</span>
+        </div>
+      </div>
+
+      <div class="card p-4">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="mb-4">
+            <label class="form-label">{{ form.reference_code.label }}</label>
+            {{ form.reference_code }}
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success btn-lg py-3 fw-700 rounded-3">
+              <i class="bi bi-check2-circle me-2"></i>Confirm Cash Payment
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <a href="{% url 'rsvp:list' %}" class="btn btn-outline-secondary w-100 mt-3 rounded-pill">
+        <i class="bi bi-arrow-left me-1"></i>Back to Attendees
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Attendees List{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Header -->
+  <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+    <div>
+      <h2 class="section-header mb-1">Attendees</h2>
+      <p class="text-muted mb-0">{{ total }} classmate{{ total|pluralize }} registered</p>
+    </div>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="?status=" class="btn btn-sm {% if not status_filter %}btn-primary-custom{% else %}btn-outline-secondary{% endif %} rounded-pill px-3">All</a>
+      <a href="?status=paid" class="btn btn-sm {% if status_filter == 'paid' %}btn-success{% else %}btn-outline-success{% endif %} rounded-pill px-3">
+        <i class="bi bi-check-circle me-1"></i>Paid
+      </a>
+      <a href="?status=unpaid" class="btn btn-sm {% if status_filter == 'unpaid' %}btn-danger{% else %}btn-outline-danger{% endif %} rounded-pill px-3">
+        <i class="bi bi-x-circle me-1"></i>Unpaid
+      </a>
+      <a href="{% url 'rsvp:export' %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+        <i class="bi bi-download me-1"></i>Export CSV
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table table-custom mb-0">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Reg Number</th>
+            <th>Phone</th>
+            <th>Payment</th>
+            <th>RSVP Date</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entry in entries %}
+          <tr>
+            <td class="text-muted">{{ forloop.counter }}</td>
+            <td>
+              <div class="d-flex align-items-center gap-2">
+                <div class="avatar">{{ entry.full_name|first|upper }}</div>
+                <span class="fw-600">{{ entry.full_name }}</span>
+              </div>
+            </td>
+            <td><code style="font-size:0.82rem;">{{ entry.registration_number }}</code></td>
+            <td>{{ entry.phone_number }}</td>
+            <td>
+              {% if entry.has_paid %}
+                <span class="badge-paid">
+                  <i class="bi bi-check-circle me-1"></i>
+                  {{ entry.payment_status|title }}
+                </span>
+              {% else %}
+                <span class="badge-unpaid">
+                  <i class="bi bi-x-circle me-1"></i>Unpaid
+                </span>
+              {% endif %}
+            </td>
+            <td class="text-muted small">{{ entry.created_at|date:"d M Y, H:i" }}</td>
+            <td>
+              {% if not entry.has_paid %}
+              <a href="{% url 'payments:mark_cash' entry.pk %}"
+                 class="btn btn-sm btn-outline-success rounded-pill px-3">
+                <i class="bi bi-cash me-1"></i>Mark Paid
+              </a>
+              {% else %}
+              <span class="text-muted small"><i class="bi bi-check2 me-1"></i>Done</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="7" class="text-center text-muted py-5">
+              <i class="bi bi-people fs-2 d-block mb-2 opacity-25"></i>
+              No attendees yet.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

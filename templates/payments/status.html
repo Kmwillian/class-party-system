@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}Payment Status{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7 text-center">
+      <div class="card p-5">
+        {% if payment.status == 'completed' %}
+          <div style="font-size:4rem;">✅</div>
+          <h3 class="fw-800 mt-3 mb-2" style="color:var(--success);">Payment Confirmed!</h3>
+          <p class="text-muted mb-4">
+            KSh {{ payment.amount }} received via {{ payment.method|upper }}.
+            {% if payment.mpesa_receipt_number %}
+              <br>Receipt: <strong>{{ payment.mpesa_receipt_number }}</strong>
+            {% endif %}
+          </p>
+          <div class="alert alert-success">You're fully sorted. See you at the party! 🔥</div>
+        {% elif payment.status == 'pending' %}
+          <div style="font-size:4rem;">⏳</div>
+          <h3 class="fw-800 mt-3 mb-2" style="color:var(--accent);">Waiting for Payment</h3>
+          <p class="text-muted mb-4">
+            Check your phone for the M-Pesa prompt and enter your PIN to complete.
+          </p>
+          <div class="alert alert-warning">
+            <i class="bi bi-phone me-2"></i>Enter your M-Pesa PIN to complete payment.
+          </div>
+          <button onclick="location.reload()" class="btn btn-primary-custom mt-2">
+            <i class="bi bi-arrow-clockwise me-1"></i>Refresh Status
+          </button>
+        {% else %}
+          <div style="font-size:4rem;">❌</div>
+          <h3 class="fw-800 mt-3 mb-2" style="color:var(--danger);">Payment Failed</h3>
+          <p class="text-muted mb-4">Something went wrong. Please try again.</p>
+          <a href="{% url 'payments:mpesa_pay' payment.rsvp_entry.pk %}"
+             class="btn btn-accent btn-lg w-100 py-3 fw-700">
+            <i class="bi bi-arrow-clockwise me-2"></i>Try Again
+          </a>
+        {% endif %}
+
+        <a href="{% url 'rsvp:success' payment.rsvp_entry.pk %}" class="btn btn-outline-secondary mt-3 rounded-pill px-4">
+          <i class="bi bi-arrow-left me-1"></i>Back
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

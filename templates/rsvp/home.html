@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}{{ event.name }} — RSVP{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="hero-gradient text-white py-5">
+  <div class="container py-3">
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <span class="badge bg-white text-primary fw-600 rounded-pill px-3 py-2 mb-3 d-inline-flex align-items-center gap-1" style="font-size:0.82rem; color: var(--primary) !important;">
+          <i class="bi bi-stars"></i> 4th Year · Last Semester Ever
+        </span>
+        <h1 class="fw-800 display-5 mb-3" style="letter-spacing:-1px; line-height:1.15;">
+          {{ event.name }} 🎉
+        </h1>
+        <p class="mb-4 opacity-90" style="font-size:1.05rem; max-width:480px;">
+          {{ event.description }}
+        </p>
+
+        <div class="d-flex flex-wrap gap-3 mb-4">
+          <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded-3 px-3 py-2">
+            <i class="bi bi-calendar-check fs-5"></i>
+            <div>
+              <div style="font-size:0.72rem; opacity:0.75;">DATE</div>
+              <div class="fw-600" style="font-size:0.9rem;">{{ event.date|date:"D, d M Y · H:i" }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded-3 px-3 py-2">
+            <i class="bi bi-geo-alt fs-5"></i>
+            <div>
+              <div style="font-size:0.72rem; opacity:0.75;">VENUE</div>
+              <div class="fw-600" style="font-size:0.9rem;">{{ event.venue }}</div>
+            </div>
+          </div>
+          <div class="d-flex align-items-center gap-2 bg-white bg-opacity-10 rounded-3 px-3 py-2">
+            <i class="bi bi-cash fs-5"></i>
+            <div>
+              <div style="font-size:0.72rem; opacity:0.75;">CONTRIBUTION</div>
+              <div class="fw-600" style="font-size:0.9rem;">KSh {{ event.contribution_amount }}</div>
+            </div>
+          </div>
+        </div>
+
+        {% if event.is_rsvp_open %}
+        <a href="{% url 'rsvp:register' %}" class="btn btn-lg btn-accent fw-700 px-5 py-3 rounded-3 shadow">
+          <i class="bi bi-check2-circle me-2"></i>Confirm My Spot — I'm Coming!
+        </a>
+        {% else %}
+        <button class="btn btn-lg btn-secondary fw-700 px-5 py-3 rounded-3" disabled>
+          <i class="bi bi-lock me-2"></i>RSVP Closed
+        </button>
+        {% endif %}
+      </div>
+
+      <div class="col-lg-5 d-none d-lg-flex justify-content-center mt-4 mt-lg-0">
+        <div class="card text-center p-4 shadow-lg" style="max-width:260px; border-radius:20px;">
+          <div style="font-size:4rem;">🎓</div>
+          <h5 class="fw-700 mt-2 mb-1" style="color: var(--primary);">Class of 2025</h5>
+          <p class="text-muted small mb-3">End of an era. Let's celebrate right!</p>
+          <hr class="divider m-0 mb-3">
+          <div class="d-flex justify-content-between px-2">
+            <div>
+              <div class="fw-800 fs-5" style="color: var(--primary);">{{ event.rsvp_entries.count }}</div>
+              <div class="text-muted" style="font-size:0.75rem;">RSVPs</div>
+            </div>
+            <div>
+              <div class="fw-800 fs-5" style="color: var(--success);">
+                {{ event.rsvp_entries.count }}
+              </div>
+              <div class="text-muted" style="font-size:0.75rem;">Attending</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How it works -->
+<section class="py-5">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 class="section-header">How it works</h2>
+      <p class="text-muted">Three simple steps and you're in!</p>
+    </div>
+    <div class="row g-4 justify-content-center">
+      {% for step in steps %}{% endfor %}
+
+      <div class="col-md-4">
+        <div class="card card-hover text-center p-4 h-100">
+          <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+               style="width:64px;height:64px;background:var(--primary-light);font-size:1.6rem;">
+            <i class="bi bi-person-check text-primary" style="color: var(--primary) !important;"></i>
+          </div>
+          <div class="badge rounded-pill mb-2" style="background:var(--primary-light);color:var(--primary);font-size:0.75rem;">Step 1</div>
+          <h6 class="fw-700 mb-2">Confirm RSVP</h6>
+          <p class="text-muted small">Fill in your name and reg number to save your spot at the party.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-hover text-center p-4 h-100">
+          <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+               style="width:64px;height:64px;background:#fff3e8;font-size:1.6rem;">
+            <i class="bi bi-phone" style="color: var(--accent) !important;"></i>
+          </div>
+          <div class="badge rounded-pill mb-2" style="background:#fff3e8;color:var(--accent);font-size:0.75rem;">Step 2</div>
+          <h6 class="fw-700 mb-2">Pay via M-Pesa</h6>
+          <p class="text-muted small">Send KSh {{ event.contribution_amount }} via M-Pesa. STK push straight to your phone.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="card card-hover text-center p-4 h-100">
+          <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+               style="width:64px;height:64px;background:var(--success-light);font-size:1.6rem;">
+            <i class="bi bi-party-popper" style="color: var(--success) !important;"></i>
+          </div>
+          <div class="badge rounded-pill mb-2" style="background:var(--success-light);color:#15803d;font-size:0.75rem;">Step 3</div>
+          <h6 class="fw-700 mb-2">Show Up & Party!</h6>
+          <p class="text-muted small">That's it. Come on the day, enjoy the vibes with your class!</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center mt-5">
+      {% if event.is_rsvp_open %}
+      <a href="{% url 'rsvp:register' %}" class="btn btn-primary-custom btn-lg px-5">
+        <i class="bi bi-arrow-right-circle me-2"></i>Register Now
+      </a>
+      {% endif %}
+      <p class="text-muted mt-3 small">
+        <i class="bi bi-clock me-1"></i>
+        RSVP closes on {{ event.rsvp_deadline|date:"D, d M Y \a\t H:i" }}
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}

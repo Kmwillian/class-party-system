@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}RSVP — {{ event.name }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+
+      <!-- Header -->
+      <div class="text-center mb-4">
+        <div class="mx-auto mb-3 d-flex align-items-center justify-content-center rounded-circle"
+             style="width:72px;height:72px;background:var(--primary-light);font-size:2rem;">
+          🎉
+        </div>
+        <h2 class="section-header">Secure your spot!</h2>
+        <p class="text-muted">Fill in your details below to confirm attendance for<br>
+          <strong>{{ event.name }}</strong>
+        </p>
+      </div>
+
+      <!-- Event mini info -->
+      <div class="card mb-4 p-3" style="background:var(--primary-light); border-radius:12px;">
+        <div class="row g-2 text-center">
+          <div class="col-4">
+            <div style="font-size:0.72rem; color:var(--primary); font-weight:600; text-transform:uppercase;">Date</div>
+            <div class="fw-600" style="font-size:0.85rem;">{{ event.date|date:"d M Y" }}</div>
+          </div>
+          <div class="col-4 border-start border-end" style="border-color:#c4b5fd !important;">
+            <div style="font-size:0.72rem; color:var(--primary); font-weight:600; text-transform:uppercase;">Venue</div>
+            <div class="fw-600" style="font-size:0.85rem;">{{ event.venue }}</div>
+          </div>
+          <div class="col-4">
+            <div style="font-size:0.72rem; color:var(--primary); font-weight:600; text-transform:uppercase;">Amount</div>
+            <div class="fw-600" style="font-size:0.85rem;">KSh {{ event.contribution_amount }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form -->
+      <div class="card p-4 p-md-5">
+        <form method="POST" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-person me-1" style="color:var(--primary);"></i>Full Name
+            </label>
+            {{ form.full_name }}
+            {% if form.full_name.errors %}
+              <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-card-text me-1" style="color:var(--primary);"></i>Registration Number
+            </label>
+            {{ form.registration_number }}
+            {% if form.registration_number.errors %}
+              <div class="text-danger small mt-1">{{ form.registration_number.errors.0 }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label">
+              <i class="bi bi-phone me-1" style="color:var(--primary);"></i>Phone Number <span class="text-muted">(for M-Pesa)</span>
+            </label>
+            {{ form.phone_number }}
+            {% if form.phone_number.errors %}
+              <div class="text-danger small mt-1">{{ form.phone_number.errors.0 }}</div>
+            {% endif %}
+            <div class="form-text">Enter your M-Pesa registered number e.g. 0712345678</div>
+          </div>
+
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary-custom btn-lg py-3 fw-700">
+              <i class="bi bi-check2-circle me-2"></i>Confirm My Attendance
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <p class="text-center text-muted small mt-3">
+        <i class="bi bi-shield-check me-1"></i>
+        Your info is only used for this party. No spam.
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

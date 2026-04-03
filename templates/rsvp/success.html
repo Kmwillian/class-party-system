@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}RSVP Confirmed!{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 text-center">
+
+      <div class="card p-5">
+        <div style="font-size:4rem; margin-bottom:1rem;">🎊</div>
+        <h2 class="fw-800 mb-2" style="color: var(--primary);">You're in, {{ rsvp.full_name|truncatewords:1 }}!</h2>
+        <p class="text-muted mb-4">Your RSVP for <strong>{{ event.name }}</strong> is confirmed.<br>Now let's sort the contribution!</p>
+
+        <hr class="divider">
+
+        <!-- RSVP details -->
+        <div class="mb-4 text-start bg-light rounded-3 p-3">
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Name</span>
+            <span class="fw-600 small">{{ rsvp.full_name }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Reg Number</span>
+            <span class="fw-600 small">{{ rsvp.registration_number }}</span>
+          </div>
+          <div class="d-flex justify-content-between mb-2">
+            <span class="text-muted small">Phone</span>
+            <span class="fw-600 small">{{ rsvp.phone_number }}</span>
+          </div>
+          <div class="d-flex justify-content-between">
+            <span class="text-muted small">Amount Due</span>
+            <span class="fw-700 small" style="color:var(--accent);">KSh {{ event.contribution_amount }}</span>
+          </div>
+        </div>
+
+        {% if rsvp.has_paid %}
+        <div class="alert alert-success d-flex align-items-center gap-2 mb-4">
+          <i class="bi bi-check-circle-fill fs-5"></i>
+          <span>Contribution paid! You're fully set. See you there! 🔥</span>
+        </div>
+        {% else %}
+        <!-- Pay now CTA -->
+        <div class="mb-3">
+          <a href="{% url 'payments:mpesa_pay' rsvp.pk %}"
+             class="btn btn-accent btn-lg w-100 py-3 fw-700 mb-3">
+            <i class="bi bi-phone me-2"></i>Pay KSh {{ event.contribution_amount }} via M-Pesa Now
+          </a>
+          <p class="text-muted small">
+            <i class="bi bi-info-circle me-1"></i>
+            You'll get an STK push on your phone. Enter your M-Pesa PIN to complete.
+          </p>
+        </div>
+
+        <div class="text-muted small">
+          Paying cash? No stress — talk to the class rep and they'll mark you as paid.
+        </div>
+        {% endif %}
+      </div>
+
+      <a href="{% url 'rsvp:home' %}" class="btn btn-outline-secondary mt-3 rounded-pill px-4">
+        <i class="bi bi-arrow-left me-1"></i>Back to Home
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

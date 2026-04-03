@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+      <h2 class="section-header mb-1">Events</h2>
+      <p class="text-muted mb-0">Manage your party events</p>
+    </div>
+    <a href="{% url 'events:create' %}" class="btn btn-primary-custom">
+      <i class="bi bi-plus-circle me-1"></i>Create Event
+    </a>
+  </div>
+
+  <div class="row g-4">
+    {% for event in events %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card card-hover h-100 p-4">
+        <div class="d-flex align-items-start justify-content-between mb-3">
+          <div style="font-size:2rem;">🎉</div>
+          {% if event.is_active %}
+            <span class="badge rounded-pill" style="background:var(--success-light);color:#15803d;font-size:0.75rem;">Active</span>
+          {% else %}
+            <span class="badge rounded-pill bg-secondary">Inactive</span>
+          {% endif %}
+        </div>
+        <h5 class="fw-700 mb-2">{{ event.name }}</h5>
+        <p class="text-muted small mb-3">{{ event.description|truncatewords:15 }}</p>
+        <div class="d-flex flex-column gap-1 mb-3">
+          <div class="d-flex align-items-center gap-2 text-muted small">
+            <i class="bi bi-calendar-check" style="color:var(--primary);"></i>
+            {{ event.date|date:"D, d M Y · H:i" }}
+          </div>
+          <div class="d-flex align-items-center gap-2 text-muted small">
+            <i class="bi bi-geo-alt" style="color:var(--accent);"></i>
+            {{ event.venue }}
+          </div>
+          <div class="d-flex align-items-center gap-2 text-muted small">
+            <i class="bi bi-cash" style="color:var(--success);"></i>
+            KSh {{ event.contribution_amount }}
+          </div>
+        </div>
+        <div class="mt-auto d-flex gap-2">
+          <a href="{% url 'events:detail' event.pk %}" class="btn btn-sm btn-outline-secondary rounded-pill px-3 flex-grow-1">
+            <i class="bi bi-eye me-1"></i>View
+          </a>
+          <a href="{% url 'events:edit' event.pk %}" class="btn btn-sm btn-primary-custom rounded-pill px-3 flex-grow-1">
+            <i class="bi bi-pencil me-1"></i>Edit
+          </a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+      <div class="card p-5 mx-auto" style="max-width:400px;">
+        <div style="font-size:3rem;">🗓️</div>
+        <h5 class="fw-700 mt-3 mb-2">No events yet</h5>
+        <p class="text-muted small">Create your first party event to get started!</p>
+        <a href="{% url 'events:create' %}" class="btn btn-primary-custom mt-2">
+          <i class="bi bi-plus-circle me-1"></i>Create Event
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

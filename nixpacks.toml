@@ -1,0 +1,30 @@
+[phases.setup]
+nixPkgs = ["python311"]
+
+[phases.install]
+cmds = ["pip install -r requirements.txt"]
+
+[phases.build]
+cmds = [
+  "python manage.py collectstatic --noinput",
+  "python manage.py migrate"
+]
+
+[start]
+cmd = "gunicorn core.wsgi --log-file -"
+```
+
+---
+
+## Step 6 — Create `.gitignore`
+
+Create a `.gitignore` file in your project root:
+```
+*.pyc
+__pycache__/
+*.pyo
+.env
+db.sqlite3
+staticfiles/
+*.log
+.DS_Store
